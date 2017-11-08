@@ -1,5 +1,6 @@
 FROM alpine-cpp
-RUN apk update && apk upgrade && apk add vim
+#RUN apk update && apk upgrade && apk add vim
+RUN apk --no-cache add vim
 
 
 RUN adduser -D -g '' yavin
