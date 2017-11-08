@@ -20,6 +20,13 @@ to connect to github and get the things:
 	ssh-keygen -t rsa -b 4096 -C "your-email@wherever-man" -f id_rsa
 ```
 
+Another way to accomplish awesome is to use pass a little:
+
+```
+pass my/private-key > id_rsa
+```
+
+
 ### It is also quite awesome to get this wired up to your bash.
 
 Add a line in `.bash_profile` or `.bashrc` or like that:
