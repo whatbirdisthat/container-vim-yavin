@@ -1,25 +1,30 @@
-FROM alpine-cpp
+FROM alpine:latest
+
 #RUN apk update && apk upgrade && apk add vim
-RUN apk --no-cache add vim
+RUN apk --no-cache add vim git openssh-client bash
 
+ARG VIMUSER=yavin
+ARG ID_RSA
 
-RUN adduser -D -g '' yavin
+RUN adduser -D -g '' ${VIMUSER}
 
-RUN mkdir /home/yavin/.ssh
-RUN ssh-keyscan -t rsa github.com > /home/yavin/.ssh/known_hosts
+RUN mkdir /home/${VIMUSER}/.ssh
+RUN ssh-keyscan -t rsa github.com > /home/${VIMUSER}/.ssh/known_hosts
 
-RUN chown -R yavin /home/yavin
-RUN chown yavin /home/yavin/.ssh
-ADD ./id_rsa /home/yavin/.ssh/id_rsa
-RUN chown yavin /home/yavin/.ssh/id_rsa
-RUN chmod 0400 /home/yavin/.ssh/id_rsa
+ENV TMP_ID_RSA ${ID_RSA}
+RUN echo "${TMP_ID_RSA}" > /home/${VIMUSER}/.ssh/id_rsa
+RUN chmod 0400 /home/${VIMUSER}/.ssh/id_rsa
+RUN chown -R ${VIMUSER} /home/${VIMUSER}
 
 #RUN git config --global url."https://".insteadOf git://
 #RUN git config --global http.sslverify false
-USER yavin
+USER ${VIMUSER}
 
-RUN git clone git@github.com:whatbirdisthat/vim-yavin.git /home/yavin/.vim
-RUN /home/yavin/.vim/bundle/yavin/install.sh
+RUN git clone git@github.com:whatbirdisthat/vim-yavin.git /home/${VIMUSER}/.vim
+WORKDIR /home/${VIMUSER}/.vim
+RUN git submodule init
+RUN git submodule update
+RUN ln -s /home/${VIMUSER}/.vim/bundle/yavin/vimrc /home/${VIMUSER}/.vimrc
 
 ENTRYPOINT vim
 
