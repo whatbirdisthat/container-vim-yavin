@@ -18,12 +18,13 @@ to connect to github and get the things:
 
 ```bash
 	ssh-keygen -t rsa -b 4096 -C "your-email@wherever-man" -f id_rsa
+  export ID_RSA=`cat id_rsa`
 ```
 
 Another way to accomplish awesome is to use pass a little:
 
 ```
-pass my/private-key > id_rsa
+  export ID_RSA=`pass my/private-key`
 ```
 
 
