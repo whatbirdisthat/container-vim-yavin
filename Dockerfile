@@ -1,6 +1,5 @@
 FROM alpine:latest
 
-#RUN apk update && apk upgrade && apk add vim
 RUN apk --no-cache add vim git openssh-client bash
 
 ARG VIMUSER=yavin
