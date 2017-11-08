@@ -1,0 +1,24 @@
+FROM debian:stretch-slim as downloader
+RUN apt update && apt install -y tar curl
+RUN mkdir /yavin
+WORKDIR /yavin
+#RUN curl -L https://github.com/whatbirdisthat/vim-yavin/releases/download/201711/yavin.tar.gz | tar xvz
+RUN curl -L https://github.com/whatbirdisthat/vim-yavin/releases/download/201711/yavin.tar.gz -o yavin.tar.gz
+RUN tar xvf yavin.tar.gz
+
+FROM alpine:latest
+
+RUN apk --no-cache add vim
+
+ARG VIMUSER=yavin
+
+RUN adduser -D -g '' ${VIMUSER}
+COPY --from=downloader /yavin /home/${VIMUSER}/.vim
+RUN chown -R ${VIMUSER} /home/${VIMUSER}
+
+USER ${VIMUSER}
+RUN ln -s /home/${VIMUSER}/.vim/bundle/yavin/vimrc /home/${VIMUSER}/.vimrc
+
+ENTRYPOINT vim
+
+
