@@ -18,6 +18,7 @@ RUN chown -R ${VIMUSER} /home/${VIMUSER}
 
 USER ${VIMUSER}
 RUN ln -s /home/${VIMUSER}/.vim/bundle/yavin/vimrc /home/${VIMUSER}/.vimrc
+RUN echo 'set shell=/bin/ash' >> /home/${VIMUSER}/.vimrc
 
 ENTRYPOINT vim
 
