@@ -24,7 +24,8 @@ ${CONTAINER_NAME}() {
     -h ${CONTAINER_NAME}.local \
     ${CONTAINER_NAME}
 }
-EOF`"
+EOF
+`"
 
 echo "$runcommand" > ~/.containers.d/${CONTAINER_NAME}
 
@@ -34,8 +35,8 @@ cat <<EOF
 
 EOF
 
+cd $THE_PWD
 }
 
 
-cd $THE_PWD
 
