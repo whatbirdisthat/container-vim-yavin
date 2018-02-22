@@ -5,15 +5,28 @@ version = 1.0
 tarname = $(package)
 distdir = $(tarname)-$(version)
 
-install: 
-	rm -f ${HOME}/.containers.d/$(container)
-	rm -f ${HOME}/.containers.d/$(image)
-	ln -s ${PWD}/src/$(container).bash ${HOME}/.containers.d/$(container)
-	cp ${PWD}/src/$(image).bash ${HOME}/.containers.d/$(image)
-	sed -i '' 's|#CONTAINER_VIM_YAVIN_HOME#|${PWD}|g' ${HOME}/.containers.d/$(image)
+VIM_USER ?= vim
+
+define RUN_COMMAND
+#!/bin/bash
+docker run -it --rm \
+	-v `pwd`:`pwd` -w `pwd` \
+	-h $(item).local \
+	$(item)
+endef
+export RUN_COMMAND
+
+create-command:
+	@echo "$$RUN_COMMAND" > "/usr/local/bin/${item}"
+	@chmod u+x "/usr/local/bin/${item}"
+
+install: create-command
+	docker build -t $(item) --squash --build-arg VIMUSER=$(VIM_USER) .
+
+clean: uninstall
+	@:
 
 uninstall:
-	rm -f ${HOME}/.containers.d/$(container)
-	rm -f ${HOME}/.containers.d/$(image)
+	rm -f /usr/local/bin/$(item)
 
 .PHONY: all clean
