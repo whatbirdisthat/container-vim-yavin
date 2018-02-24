@@ -1,9 +1,6 @@
-item = vim-yavin
+item = vim
 container = container-$(item)
 image = image-$(item)
-version = 1.0
-tarname = $(package)
-distdir = $(tarname)-$(version)
 
 VIM_USER ?= vim
 
@@ -12,7 +9,7 @@ define RUN_COMMAND
 docker run -it --rm \
 	-v `pwd`:`pwd` -w `pwd` \
 	-h $(item).local \
-	$(item)
+	$(image)
 endef
 export RUN_COMMAND
 
@@ -21,12 +18,13 @@ create-command:
 	@chmod u+x "/usr/local/bin/${item}"
 
 install: create-command
-	docker build -t $(item) --squash --build-arg VIMUSER=$(VIM_USER) .
+	docker build -t $(image) --squash --build-arg VIMUSER=$(VIM_USER) .
 
 clean: uninstall
 	@:
 
 uninstall:
 	rm -f /usr/local/bin/$(item)
+	@if [ "$(image)" == "$$(docker images $(image) --format {{.Repository}})" ] ; then docker rmi $(image) ; else echo "Image '$(image)' not found. No need to clean." ; fi
 
 .PHONY: all clean
