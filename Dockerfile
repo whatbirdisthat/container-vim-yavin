@@ -17,4 +17,3 @@ RUN echo 'set shell=/bin/ash' >> /home/${VIMUSER}/.vim/bundle/yavin/vimrc
 
 ENTRYPOINT vim
 
-
