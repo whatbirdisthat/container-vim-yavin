@@ -1,19 +1,18 @@
-FROM alpine:latest
+FROM base/archlinux:2018.08.01
 
-RUN apk --no-cache add vim
+RUN pacman -Syv --noconfirm \
+  git neovim
 
 ARG VIMUSER=yavin
+RUN useradd -mc '' ${VIMUSER}
+RUN mkdir -p /home/${VIMUSER}/.config/nvim
+WORKDIR /home/${VIMUSER}/.config/nvim
 
-RUN adduser -D -g '' ${VIMUSER}
-RUN mkdir /home/${VIMUSER}/.vim
-WORKDIR /home/${VIMUSER}/.vim
-ADD https://github.com/whatbirdisthat/vim-yavin/releases/download/201711/vim-yavin.tar.gz .
-RUN tar xvf vim-yavin.tar.gz && rm vim-yavin.tar.gz
+RUN git clone --recurse-submodules --depth 1 https://github.com/whatbirdisthat/vim-yavin.git /home/${VIMUSER}/.config/nvim
 RUN chown -R ${VIMUSER} /home/${VIMUSER}
 
 USER ${VIMUSER}
-RUN ln -s /home/${VIMUSER}/.vim/bundle/yavin/vimrc /home/${VIMUSER}/.vimrc
-RUN echo 'set shell=/bin/ash' >> /home/${VIMUSER}/.vim/bundle/yavin/vimrc
 
-ENTRYPOINT vim
+RUN ln -s /home/${VIMUSER}/.config/nvim/bundle/yavin/vimrc /home/${VIMUSER}/.config/nvim/init.vim
 
+ENTRYPOINT [ "nvim" ]
