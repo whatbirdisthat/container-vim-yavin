@@ -2,6 +2,7 @@ FROM base/archlinux:2018.08.01
 
 RUN pacman -Syv --noconfirm \
   git neovim
+
 ARG VIMUSER=yavin
 RUN useradd -mc '' ${VIMUSER}
 RUN mkdir /home/${VIMUSER}/.vim

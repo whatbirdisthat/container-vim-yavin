@@ -1,13 +1,17 @@
 repo = wbit
 item = yavin
 container = container-$(item)
-image = image-$(item)
+image = $(item)
 version = 1.0
 tarname = $(package)
 distdir = $(tarname)-$(version)
+command_loc=/usr/local/sbin/$(item)
+
+check:
+	docker run --rm -i hadolint/hadolint < Dockerfile
 
 build: check
-	docker build -t $(repo)/$(item) .
+	docker build -t $(image) .
 
 define RUN_COMMAND
 #!/bin/sh
@@ -15,29 +19,22 @@ docker run -it --rm    \
 -v `pwd`:`pwd`         \
 -w `pwd`               \
 -h $(item).local       \
-$(repo)/$(item) "$$@"
+$(image) "$$@"
 endef
 export RUN_COMMAND
 
-#
-#--env VIMUSER=`whoami` \
-#
-
 run:
-	docker run -it --rm -v `pwd`:`pwd` -w `pwd` $(repo)/$(item)
+	docker run -it --rm -v `pwd`:`pwd` -w `pwd` $(image)
 
 clean:
-	docker rmi $(repo)/$(item)
+	@if [ "$(image)" == "$$(docker images $(image) --format {{.Repository}})" ] ; then docker rmi $(image) ; else echo "Image '$(image)' not found. No need to clean." ; fi
 
 install: build
-	@echo "$$RUN_COMMAND" > "/usr/local/sbin/${item}"
-	@chmod ugo+x "/usr/local/sbin/${item}"
-
-check:
-	docker run --rm -i hadolint/hadolint < Dockerfile
+	@echo "$$RUN_COMMAND" > $(command_loc)
+	@chmod ugo+x $(command_loc)
 
 uninstall:
-	rm -f /usr/local/sbin/$(container)
+	rm -f $(command_loc)
 
 define HELP_TEXT
 YAVIN
