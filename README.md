@@ -16,6 +16,7 @@ ____    ____  ___   ____    ____  __  .__   __.         __  ____    ____
 ## Neovim is the vim and arch is the base.
 
 Experimenting with this setup instead of alpine+vim.
+I think it is starting up a little quicker ...?
 
 ## Install
 
