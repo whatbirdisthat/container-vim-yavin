@@ -23,7 +23,7 @@ I think it is starting up a little quicker ...?
 ```bash
 git clone https://github.com/whatbirdisthat/container-vim-yavin
 make build
-sudo make install
+make install
 ```
 
 ## Running it
