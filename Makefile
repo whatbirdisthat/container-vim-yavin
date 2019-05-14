@@ -5,7 +5,8 @@ image = $(item)
 version = 1.0
 tarname = $(package)
 distdir = $(tarname)-$(version)
-command_loc=/usr/local/sbin/$(item)
+#command_loc=/usr/local/sbin/$(item)
+command_loc=~/bin/$(item)
 
 check:
 	docker run --rm -i hadolint/hadolint < Dockerfile
