@@ -1,4 +1,5 @@
-FROM base/archlinux:2018.08.01
+# hadolint ignore=DL3007
+FROM archlinux/base:latest
 
 RUN pacman -Syv --noconfirm \
   git neovim
